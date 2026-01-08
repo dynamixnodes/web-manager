@@ -15,11 +15,11 @@ menu=(
 "2 : Python 24/7 Code"
 "3 : Firewall Protection"
 "4 : CloudFlare Tunnel Setup"
-"5 : Neofetch Installer"
-"6 : PLAYIT plugin"
-"7 : SSHX.io setup"
-"8 : Tailscale setup + up"
-"9 : DDoS Protection"
+"5 : PLAYIT plugin"
+"6 : SSHX.io setup"
+"7 : Tailscale setup + up"
+"8 : DDoS Protection"
+"9 : XRDP + (Mozila Extension)"
 "0 : Exit"
 )
 
@@ -174,13 +174,6 @@ EOF
   return 0
 }
 
-neofetch_install() {
-  apt update -y || true
-  apt install -y neofetch || return 1
-  echo -e "${GREEN}✅ neofetch installed.${RESET}"
-  return 0
-}
-
 playit_plugin() {
   bash <(curl -fsSL https://raw.githubusercontent.com/hopingboyz/playit/main/playit.sh) || return 1
   return 0
@@ -214,6 +207,19 @@ ddos_protection() {
   return 0
 }
 
+xrdp_mozila() {
+  sudo apt update || return 1
+  sudo apt install -y firefox-esr || return 1
+  sudo apt update && sudo apt upgrade -y || return 1
+  sudo apt install xfce4 xfce4-goodies xrdp -y || return 1
+  echo "startxfce4" > ~/.xsession || return 1
+  sudo chown $(whoami):$(whoami) ~/.xsession || return 1
+  sudo systemctl enable xrdp || return 1
+  sudo systemctl restart xrdp || return 1
+  curl ipconfig.io || return 1
+  return 0
+}
+
 # ============================
 # Main loop
 # ============================
@@ -227,10 +233,10 @@ while true; do
     3) run_command "firewall_protection" ;;
     4) run_command "cloudflared_setup" ;;
     5) run_command "neofetch_install" ;;
-    6) run_command "playit_plugin" ;;
-    7) run_command "sshx_setup" ;;
-    8) run_command "tailscale_setup" ;;
-    9) run_command "ddos_protection" ;;
+    6) run_command "sshx_setup" ;;
+    7) run_command "tailscale_setup" ;;
+    8) run_command "ddos_protection" ;;
+    9) run_command "xrdp_mozila" ;;
     0)
       echo -e "${PURPLE}Exiting Manager...${RESET}"
       exit 0
