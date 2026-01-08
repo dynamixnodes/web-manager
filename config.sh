@@ -11,15 +11,16 @@ header=(
 
 # 🟢 Menu options (green)
 menu=(
-"1 : Blueprint Extensions"
-"2 : Python 24/7 Code"
-"3 : Firewall Protection"
-"4 : CloudFlare Tunnel Setup"
-"5 : PLAYIT plugin"
-"6 : SSHX.io setup"
-"7 : Tailscale setup + up"
-"8 : DDoS Protection"
-"9 : XRDP + (Mozila Extension)"
+"1  : Blueprint Extensions"
+"2  : Python 24/7 Code"
+"3  : Firewall Protection"
+"4  : CloudFlare Tunnel Setup"
+"5  : PLAYIT plugin"
+"6  : SSHX.io setup"
+"7  : Tailscale setup + up"
+"8  : DDoS Protection"
+"9  : XRDP + (Mozila Extension)"
+"10 : System Information"
 "0 : Exit"
 )
 
