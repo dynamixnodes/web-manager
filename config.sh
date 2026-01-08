@@ -101,6 +101,7 @@ blueprint_extension() {
 }
 
 
+
 python_runner() {
   python3 <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/24-7/refs/heads/main/24) || return 1
   return 0
