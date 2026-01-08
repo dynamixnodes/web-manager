@@ -21,7 +21,7 @@ menu=(
 "8  : DDoS Protection"
 "9  : XRDP + (Mozila Extension)"
 "10 : System Information"
-"0 : Exit"
+"0  : Exit"
 )
 
 # Colors
