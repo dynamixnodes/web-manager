@@ -220,6 +220,13 @@ xrdp_mozila() {
   return 0
 }
 
+system_info() {
+  sudo apt update || return 1
+  free -h || return 1
+  curl ipconfig.io || return 1
+  return 0
+}
+
 # ============================
 # Main loop
 # ============================
@@ -237,6 +244,7 @@ while true; do
     7) run_command "tailscale_setup" ;;
     8) run_command "ddos_protection" ;;
     9) run_command "xrdp_mozila" ;;
+    10) run_command "system_info" ;;
     0)
       echo -e "${PURPLE}Exiting Manager...${RESET}"
       exit 0
