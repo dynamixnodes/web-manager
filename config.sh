@@ -5,7 +5,7 @@ clear
 # 🔷 Blue header lines
 header=(
 "-------------------------------------------------------"
-"           PTERODACTYL+ - BY DYNAMIXNODES™"
+"           WEB MANAGER - BY DYNAMIXNODES™"
 "-------------------------------------------------------"
 )
 
