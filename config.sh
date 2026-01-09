@@ -231,61 +231,48 @@ system_info() {
 
 create_user() {
   PTERO_DIR="/var/www/pterodactyl"
-
-  if [ ! -d "$PTERO_DIR" ]; then
-    echo "❌ Pterodactyl panel not found"
-    return 1
-  fi
-
   cd "$PTERO_DIR" || return 1
 
   PHP="php"
   command -v php8.2 >/dev/null && PHP="php8.2"
   command -v php8.1 >/dev/null && PHP="php8.1"
 
-  echo ""
-  read -rp "Is your user admin? (yes/no): " IS_ADMIN
+  read -rp "Is admin? (yes/no): " IS_ADMIN
   IS_ADMIN=$(echo "$IS_ADMIN" | tr '[:upper:]' '[:lower:]')
 
-  if [[ "$IS_ADMIN" != "yes" && "$IS_ADMIN" != "no" ]]; then
-    echo "❌ Please type yes or no"
-    return 1
-  fi
+  [[ "$IS_ADMIN" == "yes" ]] && ADMIN_FLAG="--admin" || ADMIN_FLAG=""
 
   read -rp "Email: " EMAIL
+  EMAIL=$(echo "$EMAIL" | tr -d '[:space:]')
+
   read -rp "Username: " USERNAME
   read -rp "First name: " FIRST_NAME
   read -rp "Last name: " LAST_NAME
+
   read -rsp "Password: " PASSWORD
   echo ""
-  read -rsp "Confirm password: " PASSWORD_CONFIRM
+  read -rsp "Confirm password: " CONFIRM
   echo ""
 
-  if [[ "$PASSWORD" != "$PASSWORD_CONFIRM" ]]; then
+  if [[ "$PASSWORD" != "$CONFIRM" ]]; then
     echo "❌ Passwords do not match"
     return 1
   fi
 
-  echo "Creating user..."
-
-  printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
-    "$EMAIL" \
-    "$USERNAME" \
-    "$FIRST_NAME" \
-    "$LAST_NAME" \
-    "$PASSWORD" \
-    "$PASSWORD_CONFIRM" \
-    "$IS_ADMIN" | sudo $PHP artisan p:user:make
+  sudo $PHP artisan p:user:make \
+    --email="$EMAIL" \
+    --username="$USERNAME" \
+    --name-first="$FIRST_NAME" \
+    --name-last="$LAST_NAME" \
+    --password="$PASSWORD" \
+    $ADMIN_FLAG
 
   if [ $? -eq 0 ]; then
-    echo ""
     echo "✅ User created successfully"
   else
     echo "❌ Failed to create user"
-    return 1
   fi
 }
-
 
 # ============================
 # Main loop
