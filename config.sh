@@ -233,28 +233,23 @@ create_user() {
   PTERO_DIR="/var/www/pterodactyl"
 
   if [ ! -d "$PTERO_DIR" ]; then
-    echo "❌ Pterodactyl panel not found at $PTERO_DIR"
+    echo "❌ Pterodactyl panel not found"
     return 1
   fi
 
   cd "$PTERO_DIR" || return 1
 
-  if command -v php8.2 >/dev/null 2>&1; then
-    PHP="php8.2"
-  elif command -v php8.1 >/dev/null 2>&1; then
-    PHP="php8.1"
-  else
-    PHP="php"
-  fi
+  PHP="php"
+  command -v php8.2 >/dev/null && PHP="php8.2"
+  command -v php8.1 >/dev/null && PHP="php8.1"
 
   echo ""
-  read -rp "Is this user an admin? (yes/no): " ADMIN_INPUT
-  ADMIN_INPUT=$(echo "$ADMIN_INPUT" | tr '[:upper:]' '[:lower:]')
+  read -rp "Is your user admin? (yes/no): " IS_ADMIN
+  IS_ADMIN=$(echo "$IS_ADMIN" | tr '[:upper:]' '[:lower:]')
 
-  if [[ "$ADMIN_INPUT" == "yes" || "$ADMIN_INPUT" == "y" ]]; then
-    IS_ADMIN=true
-  else
-    IS_ADMIN=false
+  if [[ "$IS_ADMIN" != "yes" && "$IS_ADMIN" != "no" ]]; then
+    echo "❌ Please type yes or no"
+    return 1
   fi
 
   read -rp "Email: " EMAIL
@@ -271,15 +266,16 @@ create_user() {
     return 1
   fi
 
-  sudo $PHP artisan p:user:make <<EOF
-$EMAIL
-$USERNAME
-$FIRST_NAME
-$LAST_NAME
-$PASSWORD
-$PASSWORD_CONFIRM
-$IS_ADMIN
-EOF
+  echo "Creating user..."
+
+  printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
+    "$EMAIL" \
+    "$USERNAME" \
+    "$FIRST_NAME" \
+    "$LAST_NAME" \
+    "$PASSWORD" \
+    "$PASSWORD_CONFIRM" \
+    "$IS_ADMIN" | sudo $PHP artisan p:user:make
 
   if [ $? -eq 0 ]; then
     echo ""
@@ -288,8 +284,6 @@ EOF
     echo "❌ Failed to create user"
     return 1
   fi
-
-  return 0
 }
 
 
