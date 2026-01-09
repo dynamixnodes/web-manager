@@ -237,25 +237,50 @@ create_user() {
   command -v php8.2 >/dev/null && PHP="php8.2"
   command -v php8.1 >/dev/null && PHP="php8.1"
 
-  read -rp "Is admin? (yes/no): " IS_ADMIN
+  # Colors
+  YELLOW="\e[33m"
+  CYAN="\e[36m"
+  GREEN="\e[32m"
+  RED="\e[31m"
+  RESET="\e[0m"
+
+  echo -e "${YELLOW}Is this user an administrator? (yes/no) [no]:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read IS_ADMIN
+  IS_ADMIN=${IS_ADMIN:-no}
   IS_ADMIN=$(echo "$IS_ADMIN" | tr '[:upper:]' '[:lower:]')
 
   [[ "$IS_ADMIN" == "yes" ]] && ADMIN_FLAG="--admin" || ADMIN_FLAG=""
 
-  read -rp "Email: " EMAIL
+  echo -e "${YELLOW}Email address:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read EMAIL
   EMAIL=$(echo "$EMAIL" | tr -d '[:space:]')
 
-  read -rp "Username: " USERNAME
-  read -rp "First name: " FIRST_NAME
-  read -rp "Last name: " LAST_NAME
+  echo -e "${YELLOW}Username:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read USERNAME
 
-  read -rsp "Password: " PASSWORD
+  echo -e "${YELLOW}First name:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read FIRST_NAME
+
+  echo -e "${YELLOW}Last name:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read LAST_NAME
+
+  echo -e "${YELLOW}Password:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read -s PASSWORD
   echo ""
-  read -rsp "Confirm password: " CONFIRM
+
+  echo -e "${YELLOW}Confirm password:${RESET}"
+  echo -ne "${CYAN}> ${RESET}"
+  read -s CONFIRM
   echo ""
 
   if [[ "$PASSWORD" != "$CONFIRM" ]]; then
-    echo "❌ Passwords do not match"
+    echo -e "${RED}❌ Passwords do not match${RESET}"
     return 1
   fi
 
@@ -268,9 +293,9 @@ create_user() {
     $ADMIN_FLAG
 
   if [ $? -eq 0 ]; then
-    echo "✅ User created successfully"
+    echo -e "${GREEN}✅ User created successfully${RESET}"
   else
-    echo "❌ Failed to create user"
+    echo -e "${RED}❌ Failed to create user${RESET}"
   fi
 }
 
