@@ -21,6 +21,7 @@ menu=(
 "8  : DDoS Protection"
 "9  : XRDP + (Mozila Extension)"
 "10 : System Information"
+"11 : Create Pterodactyl User"
 "0  : Exit"
 )
 
@@ -228,6 +229,70 @@ system_info() {
   return 0
 }
 
+create_user() {
+  PTERO_DIR="/var/www/pterodactyl"
+
+  if [ ! -d "$PTERO_DIR" ]; then
+    echo "❌ Pterodactyl panel not found at $PTERO_DIR"
+    return 1
+  fi
+
+  cd "$PTERO_DIR" || return 1
+
+  if command -v php8.2 >/dev/null 2>&1; then
+    PHP="php8.2"
+  elif command -v php8.1 >/dev/null 2>&1; then
+    PHP="php8.1"
+  else
+    PHP="php"
+  fi
+
+  echo ""
+  read -rp "Is this user an admin? (yes/no): " ADMIN_INPUT
+  ADMIN_INPUT=$(echo "$ADMIN_INPUT" | tr '[:upper:]' '[:lower:]')
+
+  if [[ "$ADMIN_INPUT" == "yes" || "$ADMIN_INPUT" == "y" ]]; then
+    IS_ADMIN=true
+  else
+    IS_ADMIN=false
+  fi
+
+  read -rp "Email: " EMAIL
+  read -rp "Username: " USERNAME
+  read -rp "First name: " FIRST_NAME
+  read -rp "Last name: " LAST_NAME
+  read -rsp "Password: " PASSWORD
+  echo ""
+  read -rsp "Confirm password: " PASSWORD_CONFIRM
+  echo ""
+
+  if [[ "$PASSWORD" != "$PASSWORD_CONFIRM" ]]; then
+    echo "❌ Passwords do not match"
+    return 1
+  fi
+
+  sudo $PHP artisan p:user:make <<EOF
+$EMAIL
+$USERNAME
+$FIRST_NAME
+$LAST_NAME
+$PASSWORD
+$PASSWORD_CONFIRM
+$IS_ADMIN
+EOF
+
+  if [ $? -eq 0 ]; then
+    echo ""
+    echo "✅ User created successfully"
+  else
+    echo "❌ Failed to create user"
+    return 1
+  fi
+
+  return 0
+}
+
+
 # ============================
 # Main loop
 # ============================
@@ -246,6 +311,7 @@ while true; do
     8) run_command "ddos_protection" ;;
     9) run_command "xrdp_mozila" ;;
     10) run_command "system_info" ;;
+    11) run_command "create_user" ;;
     0)
       echo -e "${PURPLE}Exiting Manager...${RESET}"
       exit 0
