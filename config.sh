@@ -11,7 +11,7 @@ header=(
 
 # 🟢 Menu options (green)
 menu=(
-"1  : Blueprint Extensions"
+"1  : Blueprint Extensions (Hosting Developement Plan)"
 "2  : Python 24/7 Code"
 "3  : Firewall Protection"
 "4  : CloudFlare Tunnel Setup"
@@ -62,43 +62,7 @@ run_command() {
 # ============================
 
 blueprint_extension() {
-  rm -rf /tmp/blueprint_ext
-  mkdir -p /tmp/blueprint_ext
-  cd /tmp/blueprint_ext || return 1
-
-  git clone https://github.com/rasingamerzop/1.git || return 1
-  cd 1 || return 1
-
-  mv nebula.blueprint /var/www/pterodactyl
-  blueprint -install nebula.blueprint || return 1
-
-  mv huxregister.blueprint /var/www/pterodactyl
-  blueprint -install huxregister.blueprint || return 1
-
-  mv loader.blueprint /var/www/pterodactyl
-  blueprint -install loader.blueprint || return 1
-
-  mv simplefavicons.blueprint /var/www/pterodactyl
-  blueprint -install simplefavicons.blueprint || return 1
-
-  mv simplefooters.blueprint /var/www/pterodactyl
-  blueprint -install simplefooters.blueprint || return 1
-
-  mv snowflakes.blueprint /var/www/pterodactyl
-  blueprint -install snowflakes.blueprint || return 1
-
-  mv mcplugin.blueprint /var/www/pterodactyl
-  blueprint -install mcplugin.blueprint || return 1
-
-  mv minecraftplayermanager.blueprint /var/www/pterodactyl
-  blueprint -install minecraftplayermanager.blueprint || return 1
-
-  mv versionchanger.blueprint /var/www/pterodactyl
-  blueprint -install versionchanger.blueprint || return 1
-
-  mv nightadmin.blueprint /var/www/pterodactyl
-  blueprint -install nightadmin.blueprint || return 1
-
+  echo -e "${YELLOW}Sorry, this requires permission of the owner!
   return 0
 }
 
